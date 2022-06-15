@@ -7,7 +7,6 @@ using WorkingWithMessages.Config;
 using WorkingWithMessages.MessageEntities;
 using System.Threading;
 using Newtonsoft.Json;
-using Microsoft.ServiceBus;
 using static System.Console;
 using static System.Threading.Thread;
 
