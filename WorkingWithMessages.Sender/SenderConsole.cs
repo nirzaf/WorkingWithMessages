@@ -19,22 +19,20 @@ namespace WorkingWithMessages.Sender
 
             //ToDo: Comment in the appropriate method
 
-            //await SendTextString("The quick brown fox jumps over the lazy dog");
+            await SendTextString("The quick brown fox jumps over the lazy dog");
 
-            //await SendPizzaOrderAsync();
+            await SendPizzaOrderAsync();
 
-            //await SendControlMessageAsync();
+            await SendControlMessageAsync();
 
-            //await SendPizzaOrderListAsMessagesAsync();
+            await SendPizzaOrderListAsMessagesAsync();
         
-            //await SendPizzaOrderListAsBatchAsync();
+            await SendPizzaOrderListAsBatchAsync();
 
-            //await SendTextStringAsMessagesAsync("The quick brown fox jumps over the lazy dog");
+            await SendTextStringAsMessagesAsync("The quick brown fox jumps over the lazy dog");
 
-            //await SendTextStringAsBatchAsync("The quick brown fox jumps over the lazy dog");
-
-
-
+            await SendTextStringAsBatchAsync("The quick brown fox jumps over the lazy dog");
+            
             WriteLine("Sender Console - Complete", ConsoleColor.White);
             Console.ReadLine();
         }
