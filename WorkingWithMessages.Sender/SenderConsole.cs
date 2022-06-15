@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WorkingWithMessages.Config;
 using WorkingWithMessages.MessageEntities;
+using static System.Console;
 
 namespace WorkingWithMessages.Sender
 {
@@ -15,7 +16,7 @@ namespace WorkingWithMessages.Sender
         static async Task Main(string[] args)
         {
             WriteLine("Sender Console - Hit enter", ConsoleColor.White);
-            Console.ReadLine();
+            ReadLine();
 
             //ToDo: Comment in the appropriate method
 
@@ -34,7 +35,7 @@ namespace WorkingWithMessages.Sender
             await SendTextStringAsBatchAsync("The quick brown fox jumps over the lazy dog");
             
             WriteLine("Sender Console - Complete", ConsoleColor.White);
-            Console.ReadLine();
+            ReadLine();
         }
 
         static async Task SendTextString(string text)
@@ -43,15 +44,11 @@ namespace WorkingWithMessages.Sender
 
             // Create a client
             var client = new QueueClient(Settings.ConnectionString, Settings.QueueName);
-
             Write("Sending...", ConsoleColor.Green);
-
             var message = new Message(Encoding.UTF8.GetBytes(text));
             await client.SendAsync(message);
-
             WriteLine("Done!", ConsoleColor.Green);
-
-
+            
             Console.WriteLine();
 
             // Always close the client
@@ -62,29 +59,21 @@ namespace WorkingWithMessages.Sender
         static async Task SendTextStringAsMessagesAsync(string text)
         {
             WriteLine("SendTextStringAsMessagesAsync", ConsoleColor.Cyan);
-
             // Create a client
             var client = new QueueClient(Settings.ConnectionString, Settings.QueueName);
-
             Write("Sending:", ConsoleColor.Green);
-
 
             foreach (var letter in text.ToCharArray())
             {
                 // Create an empty message and set the label.
                 var message = new Message();
                 message.Label = letter.ToString();
-
-
                 // Send the message
                 await client.SendAsync(message);
                 Write(message.Label, ConsoleColor.Green);
             }
-
-
             Console.WriteLine();
             Console.WriteLine();
-
             // Always close the client
             await client.CloseAsync();
         }
@@ -93,13 +82,10 @@ namespace WorkingWithMessages.Sender
         static async Task SendTextStringAsBatchAsync(string text)
         {
             WriteLine("SendTextStringAsBatchAsync", ConsoleColor.Cyan);
-
             // Create a client
             var client = new QueueClient(Settings.ConnectionString, Settings.QueueName);
-
             Write("Sending:", ConsoleColor.Green);
             var taskList = new List<Task>();
-
             var messageList = new List<Message>();
 
             foreach (var letter in text.ToCharArray())
@@ -107,24 +93,16 @@ namespace WorkingWithMessages.Sender
                 // Create an empty message and set the label.
                 var message = new Message();
                 message.Label = letter.ToString();
-
                 messageList.Add(message);
-
             }
 
             await client.SendAsync(messageList);
-
-
             Console.WriteLine();
             Console.WriteLine();
-
             // Always close the client
             await client.CloseAsync();
         }
-
-
-
-
+        
         static async Task SendControlMessageAsync()
         {
             WriteLine("SendControlMessageAsync", ConsoleColor.Cyan);
@@ -170,8 +148,7 @@ namespace WorkingWithMessages.Sender
                 Label = "PizzaOrder",
                 ContentType = "application/json"
             };
-
-
+            
             // Send the message...
             var client = new QueueClient(Settings.ConnectionString, Settings.QueueName);
             Write("Sending order...", ConsoleColor.Green);
@@ -179,21 +156,16 @@ namespace WorkingWithMessages.Sender
             WriteLine("Done!", ConsoleColor.Green);
             Console.WriteLine();
             await client.CloseAsync();
-
         }
 
         static async Task SendPizzaOrderListAsMessagesAsync()
         {
             WriteLine("SendPizzaOrderListAsMessagesAsync", ConsoleColor.Cyan);
-
             var pizzaOrderList = GetPizzaOrderList();
-
             // Create a queue client
             var client = new QueueClient(Settings.ConnectionString, Settings.QueueName);
-
             WriteLine("Sending...", ConsoleColor.Yellow);
             var watch = Stopwatch.StartNew();
-
             foreach (var pizzaOrder in pizzaOrderList)
             {
                 var jsonPizzaOrder = JsonConvert.SerializeObject(pizzaOrder);
@@ -217,10 +189,8 @@ namespace WorkingWithMessages.Sender
 
             var pizzaOrderList = GetPizzaOrderList();
             var client = new QueueClient(Settings.ConnectionString, Settings.QueueName);
-
             var watch = Stopwatch.StartNew();
             var messageList = new List<Message>();
-
             foreach (var pizzaOrder in pizzaOrderList)
             {
                 var jsonPizzaOrder = JsonConvert.SerializeObject(pizzaOrder);
@@ -235,12 +205,8 @@ namespace WorkingWithMessages.Sender
 
             WriteLine("Sending...", ConsoleColor.Yellow);
             await client.SendAsync(messageList);
-
             // Always close the client!
             await client.CloseAsync();
-
-
-
             WriteLine($"Sent { pizzaOrderList.Count } orders! - Time: { watch.ElapsedMilliseconds } milliseconds, that's { pizzaOrderList.Count / watch.Elapsed.TotalSeconds } messages per second.", ConsoleColor.Green);
             Console.WriteLine();
             Console.WriteLine();
@@ -273,20 +239,18 @@ namespace WorkingWithMessages.Sender
 
         private static void WriteLine(string text, ConsoleColor color)
         {
-            var tempColor = Console.ForegroundColor;
-            Console.ForegroundColor = color;
+            var tempColor = ForegroundColor;
+            ForegroundColor = color;
             Console.WriteLine(text);
-            Console.ForegroundColor = tempColor;
+            ForegroundColor = tempColor;
         }
 
         private static void Write(string text, ConsoleColor color)
         {
-            var tempColor = Console.ForegroundColor;
-            Console.ForegroundColor = color;
+            var tempColor = ForegroundColor;
+            ForegroundColor = color;
             Console.Write(text);
-            Console.ForegroundColor = tempColor;
+            ForegroundColor = tempColor;
         }
-
-
     }
 }
