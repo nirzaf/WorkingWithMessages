@@ -13,16 +13,14 @@ using static System.Threading.Thread;
 
 namespace WorkingWithMessages.Receiver
 {
-    class ReceiverConsole
+    internal static class ReceiverConsole
     {
 
         private static QueueClient QueueClient;
-
         static async Task Main(string[] args)
         {
             WriteLine("Receiver Console", ConsoleColor.White);
             await RecreateQueueAsync();
-            
             //Comment in the appropriate method
             //ReceiveAndProcessText(1);
             //ReceiveAndProcessPizzaOrdes(1);
@@ -31,15 +29,12 @@ namespace WorkingWithMessages.Receiver
             //ReceiveAndProcessControlMessage(1);
             //ReceiveAndProcessCharacters(1);
             //ReceiveAndProcessCharacters(16);
-            
             //WriteLine("Receiving, hit enter to exit", ConsoleColor.White);
             //Console.ReadLine();
             StopReceivingAsync().Wait();
 
         }
-
-
-
+        
         static void ReceiveAndProcessText(int threads)
         {
             WriteLine($"ReceiveAndProcessText({ threads })", ConsoleColor.Cyan);
@@ -108,7 +103,6 @@ namespace WorkingWithMessages.Receiver
 
         static async Task ProcessPizzaMessageAsync(Message message, CancellationToken token)
         {
-
             // Deserialize the message body.
             var messageBodyText = Encoding.UTF8.GetString(message.Body);
             var pizzaOrder = JsonConvert.DeserializeObject<PizzaOrder>(messageBodyText);
@@ -116,7 +110,6 @@ namespace WorkingWithMessages.Receiver
             CookPizza(pizzaOrder);
             // Complete the message
             await QueueClient.CompleteAsync(message.SystemProperties.LockToken);
-
         }
 
         static async Task ProcessTextMessageAsync(Message message, CancellationToken token)
@@ -139,15 +132,12 @@ namespace WorkingWithMessages.Receiver
             // Complete the message
             await QueueClient.CompleteAsync(message.SystemProperties.LockToken);
         }
-
-
+        
         static Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
         {
             WriteLine(exceptionReceivedEventArgs.Exception.Message, ConsoleColor.Red);
             return Task.CompletedTask;
         }
-
-
 
         static void ReceiveAndProcessCharacters(int threads)
         {
@@ -169,17 +159,14 @@ namespace WorkingWithMessages.Receiver
             ReadLine();
             StopReceivingAsync().Wait();
         }
-
-
+        
         static async Task ProcessCharacterMessageAsync(Message message, CancellationToken token)
         {
             Write(message.Label, ConsoleColor.Green);
             // Complete the message receive operation
             await QueueClient.CompleteAsync(message.SystemProperties.LockToken);
         }
-
-
-
+        
         static async Task StopReceivingAsync()
         {
             // Close the client, which will stop the message pump.
@@ -200,8 +187,6 @@ namespace WorkingWithMessages.Receiver
             WriteLine($"Creating queue: { Settings.QueueName }...", ConsoleColor.Magenta);
             await manager.CreateQueueAsync(Settings.QueueName);
             WriteLine("Done!", ConsoleColor.Magenta);
-
-
         }
 
         private static void CookPizza(PizzaOrder order)
@@ -210,9 +195,6 @@ namespace WorkingWithMessages.Receiver
             Sleep(5000);
             WriteLine($"    { order.Type } pizza for {  order.CustomerName } is ready!", ConsoleColor.Green);
         }
-
-
-
 
         private static void WriteLine(string text, ConsoleColor color)
         {
@@ -229,9 +211,6 @@ namespace WorkingWithMessages.Receiver
             Console.Write(text);
             ForegroundColor = tempColor;
         }
-
-
-
-
+        
     }
 }
